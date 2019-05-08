@@ -1,13 +1,12 @@
 package com.hospital.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hospital.entity.Doctor;
-import com.hospital.entity.Hospitalization;
-import com.hospital.entity.Login;
-import com.hospital.entity.Patient;
+import com.hospital.entity.*;
 import com.hospital.service.*;
 import com.hospital.uitls.DrugsUtils;
+import com.hospital.uitls.PDFUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +28,16 @@ public class DoctorController {
     HospitalizationService hospitalizationService;
     @Autowired
     MedicalhistoryService medicalhistoryService;
+    @Autowired
+    OptionService optionService;
+    @Autowired
+    SeekService seekService;
+    @Value("${filepath.seekpdfpath}")
+    private String path;
     @RequestMapping("/admin/doctorManage")
     public String doctorManage(HttpServletRequest request,@RequestParam(value="name",required = false) String name,@RequestParam(value="certId",required = false) String certId){
+        request.setAttribute("name",name);
+        request.setAttribute("certId",certId);
         request.setAttribute("doctors",doctorService.getAllDoctor(name,certId));
         return "admin/doctorManage";
     }
@@ -74,6 +81,7 @@ public class DoctorController {
     }
     @RequestMapping("/doctor/seek/{id}")
     public String seek(@PathVariable Integer id,HttpServletRequest request){
+        request.setAttribute("options",optionService.getAll());
         request.setAttribute("patient",patientService.getPatient(id));
         request.setAttribute("drugs",drugsService.getAllDrugs());
         return "doctor/seek";
@@ -83,7 +91,6 @@ public class DoctorController {
     public JSONObject drug(@RequestBody Map map){
         JSONObject json=new JSONObject();
         Patient patient=new Patient();
-        System.out.println(map);
         patient.setDrugsids(DrugsUtils.vaild(map));
         patient.setId(Integer.parseInt((String)map.get("patientid")));
         json.put("message",patientService.seek(patient));
@@ -109,5 +116,28 @@ public class DoctorController {
         json.put("doctors",doctorService.getDoctorByDepartment(department));
         return json;
     }
+    @RequestMapping( value = "/doctor/seekinfo",method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject seekinfo(@RequestBody Map map){
+        JSONObject json=new JSONObject();
+        String message=doctorService.seekInfo(map);
+        json.put("message",message);
+        return json;
+    }
+    @RequestMapping( value = "/doctor/printseek/{id}",method = RequestMethod.POST)
+    @ResponseBody
+    public JSONObject printseek(@PathVariable Integer id,HttpSession session){
+        Login login=(Login)session.getAttribute("login");
+        Doctor doctor=doctorService.getDoctorByLoginId(login.getId());
+        JSONObject json=new JSONObject();
+        Seek seek=seekService.getSeekByPatientId(id);
+        seek.setPatientname(patientService.getPatient(id).getName());
+        seek.setDoctorname(doctor.getName());
+        //createSeekInfo，第三个参数填空字符串就是生成在项目根目录里面，要是想生成在别的路径，例：D:\\ 就是生成在D盘根目录
+        String message= PDFUtils.createSeekInfo(seek,optionService,path);
+        json.put("message",message);
+        return json;
+    }
+
 
 }

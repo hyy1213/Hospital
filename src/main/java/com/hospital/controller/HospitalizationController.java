@@ -22,6 +22,8 @@ public class HospitalizationController {
     PatientService patientService;
     @RequestMapping("/admin/hospitalizationManage")
     public String hospitalizationManage(HttpServletRequest request,@RequestParam(value = "patientname",required = false)String patientname,@RequestParam(value = "intime",required = false)String intime){
+        request.setAttribute("patientname",patientname);
+        request.setAttribute("intime",intime);
         request.setAttribute("hospitalizations",hospitalizationService.getAllHospitalizations(patientname,intime));
         return "admin/hospitalizationManage";
     }
@@ -67,7 +69,7 @@ public class HospitalizationController {
 
         //设置日期格式
         HSSFCellStyle style = workbook.createCellStyle();
-        style.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy h:mm"));
+        style.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy"));
 
         //新增数据行，并且设置单元格数据
         int rowNum=1;
@@ -77,8 +79,8 @@ public class HospitalizationController {
             row.createCell(1).setCellValue(hospitalization.getFloor());
             row.createCell(2).setCellValue(hospitalization.getBed());
             row.createCell(3).setCellValue(hospitalization.getDoor());
-            row.createCell(4).setCellValue(hospitalization.getMedicalname());
-            row.createCell(5).setCellValue(hospitalization.getPatientname());
+            row.createCell(4).setCellValue(hospitalization.getPatientname());
+            row.createCell(5).setCellValue(hospitalization.getMedicalname());
             HSSFCell cell1 = row.createCell(6);
             HSSFCell cell2 = row.createCell(7);
             cell1.setCellValue(hospitalization.getIntime());

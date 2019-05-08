@@ -9,19 +9,23 @@
     <script language="javascript" type="text/javascript" src="/static/js/KunyiHTML5.min.js"></script>
     <script language="javascript" type="text/javascript" src="/static/js/Kunyilibrary.js"></script>
 </head>
-<body class="layui-layout-body">
+<body >
 <header>
     <a class="logo" href="/hospital"><img src="/static/images/logo.png" width="350" height="51"/></a>
-    <ul>
-        <li><a href="/loginout">退出登录</a></li>
-        <li><a href="/patient/medicalhistory">病史</a></li>
-        <li><a href="/patient/hospitalization">住院</a></li>
-        <li><a href="/patient/appointment">挂号</a></li>
-        <li><a href="/patient/search">查询</a></li>
-    </ul>
 </header>
 <div class="layui-layout layui-layout-admin">
     <#--<#include "../menu.flt"/>-->
+    <div>
+        <table style="margin: 0 auto;">
+            <tr>
+                <td><a href="/patient/appointment">挂号</a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td><a href="/patient/search">查询</a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td><a href="/patient/medicalhistory">病史</a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td><a href="/patient/hospitalization">住院</a>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td><a href="/loginout">退出登录</a></td>
+            </tr>
+        </table>
+    </div>
     <!-- 内容主体区域 -->
     <div style="padding: 15px;">
         <#list medicalhistorys as medicalhistory>
@@ -48,6 +52,7 @@
             <hr>
         </#list>
     </div>
+    <div style="height: 400px;"></div>
 </div>
 <footer>
     <div class="footBase">
@@ -58,6 +63,6 @@
         <div class="QRcode"><img src="/static/images/QRcode.jpg" width="104" height="104"><br/>手机扫一扫关注人民医院官方微信</div>
     </div>
 </footer>
-<script src="../static/js/layui.all.js"></script>
+<script src="/static/js/layui.all.js"></script>
 </body>
 </html>

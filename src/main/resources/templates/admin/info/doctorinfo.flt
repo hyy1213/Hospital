@@ -21,23 +21,33 @@
                     <col width="200">
                     <col>
                 </colgroup>
-                <tr>
-                    <td style="width: 100px">登录账号：</td>
-                    <td>
-                        <input type="text" value="${doctor.username}" name="username" required  class="layui-input" >
-                        <input type="hidden" value="${doctor.loginid}" name="loginid" required  class="layui-input" >
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width: 100px">登录密码：</td>
-                    <td>
-                        <input type="text" value="${doctor.password}" name="password" required  class="layui-input" >
-                    </td>
-                </tr>
+                    <tr>
+                        <td style="width: 100px">登录账号：</td>
+                        <td>
+                            <input type="text" value="${doctor.username!''}" name="username" required  class="layui-input" >
+                            <input type="hidden" value="${doctor.loginid!''}" name="loginid" required  class="layui-input" >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100px">登录密码：</td>
+                        <td>
+                            <input type="text" value="${doctor.password!''}" name="password" required  class="layui-input" >
+                        </td>
+                    </tr>
                 <tr>
                     <td style="width: 100px">姓名：</td>
                     <td>
                         <input type="text" value="${doctor.name}" name="name" required  class="layui-input" >
+                    </td>
+                </tr>
+                <tr>
+                    <td>是否为专家：</td>
+                    <td>
+                        <select name="expert">
+                            <option value="">请选择</option>
+                            <option value="0" <#if doctor.expert==0>selected</#if>>非专家</option>
+                            <option value="1" <#if doctor.expert==1>selected</#if>>专家</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
@@ -78,6 +88,14 @@
                     <td>地址：</td>
                     <td>
                         <input type="text" value="${doctor.address}" name="address" required  class="layui-input" >
+                    </td>
+                </tr>
+                <tr>
+                    <td>简介：</td>
+                    <td>
+                        <textarea name="text" required  class="layui-input" >
+                            ${doctor.text}
+                        </textarea>
                     </td>
                 </tr>
                 <tr>
